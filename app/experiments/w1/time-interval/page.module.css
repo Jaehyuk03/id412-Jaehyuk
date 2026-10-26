@@ -10,14 +10,3 @@
   width: 100%;
   height: 100%;
 }
-
-/* Neon-green glow around the edges of the screen, on top of the canvas. */
-.edgeGlow {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  box-shadow:
-    inset 0 0 8px #39ff14,
-    inset 0 0 40px rgba(57, 255, 20, 0.5),
-    inset 0 0 120px rgba(57, 255, 20, 0.25);
-}

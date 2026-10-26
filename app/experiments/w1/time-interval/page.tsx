@@ -15,6 +15,7 @@ const GLOW = 14; // px, neon glow blur on the brightest digits
 const MIN_ZOOM = 0.5; // most zoomed out
 const MAX_ZOOM = 4; // most zoomed in
 const ZOOM_SPEED = 0.0015; // how much one scroll step zooms
+const EDGE = 120; // px, how far the neon edge glow reaches into the screen
 
 type Cell = { digit: number; interval: number; next: number; blank: boolean };
 type Drop = { y: number; speed: number }; // y in cells, speed in cells per second
@@ -150,7 +151,38 @@ export default function TimeInterval() {
         }
       }
 
+      drawEdgeGlow();
       frame = requestAnimationFrame(draw);
+    }
+
+    // Neon-green glow along the screen edges, drawn last so it sits on top.
+    function drawEdgeGlow() {
+      const w = innerWidth;
+      const h = innerHeight;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+
+      // Soft glow fading inward from each edge.
+      const edges = [
+        [0, 0, 0, EDGE, 0, 0, w, EDGE], // top
+        [0, h, 0, h - EDGE, 0, h - EDGE, w, EDGE], // bottom
+        [0, 0, EDGE, 0, 0, 0, EDGE, h], // left
+        [w, 0, w - EDGE, 0, w - EDGE, 0, EDGE, h], // right
+      ];
+      ctx.shadowBlur = 0;
+      for (const [x0, y0, x1, y1, rx, ry, rw, rh] of edges) {
+        const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
+        gradient.addColorStop(0, "rgba(57, 255, 20, 0.45)");
+        gradient.addColorStop(1, "rgba(57, 255, 20, 0)");
+        ctx.fillStyle = gradient;
+        ctx.fillRect(rx, ry, rw, rh);
+      }
+
+      // Bright neon line right at the edge.
+      ctx.strokeStyle = "#39ff14";
+      ctx.lineWidth = 3;
+      ctx.shadowColor = "#39ff14";
+      ctx.shadowBlur = 20;
+      ctx.strokeRect(0, 0, w, h);
     }
 
     resize();
@@ -168,7 +200,6 @@ export default function TimeInterval() {
   return (
     <main className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} />
-      <div className={styles.edgeGlow} />
     </main>
   );
 }
