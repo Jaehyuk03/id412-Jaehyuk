@@ -2,25 +2,18 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./page.module.css";
+import { BARK, RUN_1, RUN_2, SIT } from "./sprites";
 
-// Tracks the mouse. A white puppy silhouette runs after the cursor. When the
+// Tracks the mouse. A little white pixel puppy runs after the cursor. When the
 // mouse stops, the puppy sits; when the mouse moves again, it barks and runs.
 const EASE = 0.08; // how fast the puppy catches up (0 to 1)
-const STOP_DIST = 60; // px, the puppy stops this far from the cursor
-const WAKE_DIST = 40; // px, how far the mouse must move away before a sitting puppy gets up
+const STOP_DIST = 40; // px, the puppy stops this far from the cursor
+const WAKE_DIST = 30; // px, how far the mouse must move away before a sitting puppy gets up
 const SIT_DELAY = 600; // ms standing still before the puppy sits
 const BARK_TIME = 450; // ms the puppy stands and barks before running
-const DOG_W = 110; // px, size the puppy is drawn at
-const DOG_H = 92;
+const PIXEL = 4; // px, size of one pixel of the puppy (16 × 11 pixels)
 
 type Point = { x: number; y: number };
-
-// The puppy illustrations, in public/experiments/w1/mouse-tracking/.
-function loadImage(name: string) {
-  const img = new Image();
-  img.src = `/experiments/w1/mouse-tracking/${name}.svg`;
-  return img;
-}
 
 export default function MouseTracking() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -35,12 +28,6 @@ export default function MouseTracking() {
     let sitting = false;
     let lastMoved = performance.now(); // when the puppy last walked
     let barkStart = -Infinity; // when the puppy last started barking
-    const images = {
-      run1: loadImage("run-1"),
-      run2: loadImage("run-2"),
-      sit: loadImage("sit"),
-      bark: loadImage("bark"),
-    };
 
     function resize() {
       dpr = window.devicePixelRatio || 1;
@@ -59,7 +46,7 @@ export default function MouseTracking() {
       const dx = mouse.x - dog.x;
       const dy = mouse.y - dog.y;
       const dist = Math.hypot(dx, dy);
-      let pose = images.run1;
+      let pose = RUN_1;
       let bob = 0; // px, little hop while running
 
       if (sitting && dist > STOP_DIST + WAKE_DIST) {
@@ -69,7 +56,7 @@ export default function MouseTracking() {
       }
 
       if (now - barkStart < BARK_TIME) {
-        pose = images.bark; // stand still and bark
+        pose = BARK; // stand still and bark
       } else if (dist > STOP_DIST + 1 && !sitting) {
         // Run toward a point STOP_DIST away from the cursor, so it doesn't sit on it.
         const step = (dist - STOP_DIST) * EASE;
@@ -77,12 +64,13 @@ export default function MouseTracking() {
         dog.y += (dy / dist) * step;
         if (Math.abs(dx) > 5) facing = dx > 0 ? 1 : -1;
         lastMoved = now;
-        // Swap between the two running pictures every 120 ms.
-        pose = Math.floor(now / 120) % 2 === 0 ? images.run1 : images.run2;
-        bob = Math.abs(Math.sin(now / 60)) * 4;
+        // Swap between the two running frames every 120 ms, hopping on the second.
+        const step2 = Math.floor(now / 120) % 2 === 1;
+        pose = step2 ? RUN_2 : RUN_1;
+        bob = step2 ? PIXEL : 0;
       } else if (sitting || now - lastMoved > SIT_DELAY) {
         sitting = true;
-        pose = images.sit;
+        pose = SIT;
       }
 
       // Clear the screen.
@@ -90,35 +78,41 @@ export default function MouseTracking() {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, innerWidth, innerHeight);
 
-      // Draw the puppy, feet at dog.x / dog.y. Flip it to look left.
-      if (pose.complete) {
-        ctx.save();
-        ctx.translate(dog.x, dog.y - bob);
-        ctx.scale(facing, 1);
-        ctx.drawImage(pose, -DOG_W / 2, -DOG_H, DOG_W, DOG_H);
-        ctx.restore();
-      }
+      drawPuppy(pose, dog.x, dog.y - bob);
 
       // "멍!" speech bubble, fading out a little after the bark.
       const barkAge = now - barkStart;
       if (barkAge < BARK_TIME + 500) {
         const alpha = Math.min(1, (BARK_TIME + 500 - barkAge) / 500);
-        drawBark(dog.x + facing * 50, dog.y - DOG_H - 25, alpha);
+        drawBark(dog.x + facing * 28, dog.y - pose.length * PIXEL - 16, alpha);
       }
 
       frame = requestAnimationFrame(draw);
     }
 
-    // A white bubble with "멍!".
+    // Draw a sprite one square at a time, feet centred on x / y.
+    // When facing left, read each row from the right to mirror it.
+    function drawPuppy(sprite: string[], x: number, y: number) {
+      const w = sprite[0].length;
+      const left = Math.round(x - (w * PIXEL) / 2);
+      const top = Math.round(y - sprite.length * PIXEL);
+      ctx.fillStyle = "white";
+      sprite.forEach((row, r) => {
+        for (let c = 0; c < w; c++) {
+          const pixel = facing === 1 ? row[c] : row[w - 1 - c];
+          if (pixel === "#") ctx.fillRect(left + c * PIXEL, top + r * PIXEL, PIXEL, PIXEL);
+        }
+      });
+    }
+
+    // A small white box with "멍!".
     function drawBark(x: number, y: number, alpha: number) {
       ctx.save();
       ctx.globalAlpha = alpha;
       ctx.fillStyle = "white";
-      ctx.beginPath();
-      ctx.roundRect(x - 34, y - 20, 68, 40, 16);
-      ctx.fill();
+      ctx.fillRect(Math.round(x - 20), Math.round(y - 11), 40, 22);
       ctx.fillStyle = "black";
-      ctx.font = "bold 20px sans-serif";
+      ctx.font = "bold 12px sans-serif";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
       ctx.fillText("멍!", x, y + 1);
