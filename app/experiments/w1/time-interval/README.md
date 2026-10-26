@@ -1,19 +1,20 @@
 # Time Interval
 
-A number that counts from 0 to 100, one step every 100 ms, then starts over. White on black, nothing else.
+A full-screen grid of digits. Every cell counts 0 → 9 at its own random speed and wraps back to 0; some cells are blank, and bright "digital rain" drops fall down the columns.
 
 - Route: /experiments/w1/time-interval
-- Week: W1 · Tech: React state + setInterval, CSS Modules
+- Week: W1 · Tech: Canvas, requestAnimationFrame, CSS Modules
 - Inputs: time only
-- Parameters: MAX_COUNT (100), INTERVAL (100 ms)
+- Parameters: CELL (28 px), MIN_INTERVAL / MAX_INTERVAL (60–900 ms), BLANK_CHANCE (0.12), TRAIL (12 cells)
 
 ## How it works
-- `useEffect` starts one `setInterval`; each tick adds 1 to `count` and wraps at `MAX_COUNT`.
-- The cleanup clears the interval when the page unmounts.
-- Layout is a fixed full-screen flex box; the number is sized in `vw` so it scales with the window.
+- `resize()` builds a grid of `CELL`-sized cells that covers the whole window (rebuilt on resize).
+- Each cell has its own `interval`; when `now` passes its `next` time it adds 1 and wraps at 10.
+- On wrapping to 0 a cell re-rolls its speed and whether it is blank.
+- One drop per column moves down at a random speed; digits just behind the head are drawn brighter, fading over `TRAIL` cells.
 
 ## Run
 pnpm dev → http://localhost:3000/experiments/w1/time-interval
 
 ## Status / next
-Works. Next: vary the interval, or drive it with the mouse.
+Works. Next: drops that react to the mouse, or colour per speed.
