@@ -1,22 +1,18 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 100">
-  <g stroke="#5a3e2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M30 52 Q18 38 28 24" fill="none" stroke-width="10"/><path d="M30 52 Q18 38 28 24" fill="none" stroke="#fbe9d0" stroke-width="4"/>
-    <line x1="38" y1="64" x2="36" y2="88" stroke="#5a3e2b" stroke-width="11"/><line x1="38" y1="64" x2="36" y2="88" stroke="#fbe9d0" stroke-width="5"/>
-    <line x1="48" y1="66" x2="48" y2="88" stroke="#5a3e2b" stroke-width="11"/><line x1="48" y1="66" x2="48" y2="88" stroke="#fbe9d0" stroke-width="5"/>
-    <line x1="70" y1="66" x2="70" y2="88" stroke="#5a3e2b" stroke-width="11"/><line x1="70" y1="66" x2="70" y2="88" stroke="#fbe9d0" stroke-width="5"/>
-    <line x1="80" y1="64" x2="82" y2="88" stroke="#5a3e2b" stroke-width="11"/><line x1="80" y1="64" x2="82" y2="88" stroke="#fbe9d0" stroke-width="5"/>
-    <ellipse cx="56" cy="58" rx="30" ry="17" fill="#fbe9d0"/>
-    <ellipse cx="48" cy="53" rx="10" ry="7" fill="#c98a4b" stroke="none"/>
-    <path d="M74 46 Q80 55 76 64" fill="none" stroke="#e8505b" stroke-width="5"/>
-    <g transform="rotate(-12 88 38)">
-      <circle cx="88" cy="38" r="20" fill="#fbe9d0"/>
-      <path d="M80 20 Q66 20 66 36 Q74 40 85 28 Z" fill="#c98a4b"/>
-      <path d="M93 46 Q102 62 111 46 Z" fill="#7a2e2e"/>
-      <ellipse cx="102" cy="54" rx="4" ry="3" fill="#ff8fa3" stroke="none"/>
-      <ellipse cx="101" cy="42" rx="10" ry="6" fill="#fff"/>
-      <ellipse cx="110" cy="39" rx="4" ry="3.2" fill="#5a3e2b"/>
-      <path d="M90 35 Q94 30 98 35" fill="none"/>
-      <circle cx="89" cy="45" r="3.5" fill="#ffb3b3" stroke="none"/>
+  <g fill="#fff" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M30 52 Q18 38 28 24" fill="none" stroke-width="7"/>
+    <line x1="38" y1="64" x2="36" y2="88" stroke-width="9"/>
+    <line x1="48" y1="66" x2="48" y2="88" stroke-width="9"/>
+    <line x1="70" y1="66" x2="70" y2="88" stroke-width="9"/>
+    <line x1="80" y1="64" x2="82" y2="88" stroke-width="9"/>
+    <ellipse cx="56" cy="58" rx="30" ry="17"/>
+    <ellipse cx="76" cy="48" rx="10" ry="12"/>
+    <g transform="rotate(-14 88 38)">
+    <circle cx="88" cy="38" r="18"/>
+    <path d="M80 22 Q66 22 64 40 Q66 48 72 44 Q74 32 84 26 Z"/>
+      <ellipse cx="103" cy="39" rx="13" ry="6"/>
+      <circle cx="114" cy="37" r="3.5"/>
+      <path d="M94 48 L112 53 Q114 56 110 57 L92 54 Z"/>
     </g>
   </g>
 </svg>
