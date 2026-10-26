@@ -171,17 +171,17 @@ export default function TimeInterval() {
       ctx.shadowBlur = 0;
       for (const [x0, y0, x1, y1, rx, ry, rw, rh] of edges) {
         const gradient = ctx.createLinearGradient(x0, y0, x1, y1);
-        gradient.addColorStop(0, "rgba(57, 255, 20, 0.45)");
+        gradient.addColorStop(0, "rgba(57, 255, 20, 0.18)");
         gradient.addColorStop(1, "rgba(57, 255, 20, 0)");
         ctx.fillStyle = gradient;
         ctx.fillRect(rx, ry, rw, rh);
       }
 
-      // Bright neon line right at the edge.
-      ctx.strokeStyle = "#39ff14";
-      ctx.lineWidth = 3;
+      // Thin neon line right at the edge.
+      ctx.strokeStyle = "rgba(57, 255, 20, 0.6)";
+      ctx.lineWidth = 1.5;
       ctx.shadowColor = "#39ff14";
-      ctx.shadowBlur = 20;
+      ctx.shadowBlur = 10;
       ctx.strokeRect(0, 0, w, h);
     }
 

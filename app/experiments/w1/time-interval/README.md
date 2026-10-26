@@ -14,7 +14,7 @@ A full-screen grid of neon-green digits. Every cell counts 0 → 9 at its own ra
 - One drop per column moves down at a random speed; digits just behind the head are drawn brighter, fading over `TRAIL` cells.
 - Digits are drawn neon green (`#39ff14`); the bright ones get a canvas `shadowBlur` glow, dim ones none (keeps it fast).
 - Scrolling changes `targetZoom`; `zoom` eases toward it and `offsetX/Y` move so the point under the mouse stays put. The offset is clamped so the grid always covers the screen; only on-screen cells are drawn.
-- `drawEdgeGlow()` runs last each frame: four gradients fading inward over `EDGE` px, plus a bright green line with `shadowBlur` at the very edge.
+- `drawEdgeGlow()` runs last each frame: four gradients fading inward over `EDGE` px, plus a thin, soft green line with `shadowBlur` at the very edge.
 
 ## Run
 pnpm dev → http://localhost:3000/experiments/w1/time-interval
