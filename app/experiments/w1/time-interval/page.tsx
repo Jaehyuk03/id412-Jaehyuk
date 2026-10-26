@@ -36,6 +36,10 @@ export default function TimeInterval() {
     let drops: Drop[] = [];
     let zoom = 1; // current zoom, eases toward targetZoom
     let targetZoom = 1; // set by the scroll wheel
+    let offsetX = 0; // where the grid's top-left corner is on screen, in px
+    let offsetY = 0;
+    let mouseX = 0; // the point we zoom around (mouse position at the last scroll)
+    let mouseY = 0;
 
     function newDrop(startAbove: boolean): Drop {
       return {
@@ -60,11 +64,16 @@ export default function TimeInterval() {
         blank: Math.random() < BLANK_CHANCE,
       }));
       drops = Array.from({ length: cols }, () => newDrop(false));
+      // Start with the grid centred on screen.
+      offsetX = (innerWidth - cols * CELL * zoom) / 2;
+      offsetY = (innerHeight - rows * CELL * zoom) / 2;
     }
 
-    // Scroll up = zoom in, scroll down = zoom out.
+    // Scroll up = zoom in, scroll down = zoom out, around the mouse.
     function onWheel(event: WheelEvent) {
       event.preventDefault();
+      mouseX = event.clientX;
+      mouseY = event.clientY;
       targetZoom *= Math.exp(-event.deltaY * ZOOM_SPEED);
       targetZoom = Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, targetZoom));
     }
@@ -75,7 +84,18 @@ export default function TimeInterval() {
     function draw(now: number) {
       const dt = (now - last) / 1000;
       last = now;
-      zoom += (targetZoom - zoom) * 0.15; // ease, so zooming feels smooth
+      // Ease toward targetZoom, so zooming feels smooth. Move the grid so the
+      // point under the mouse stays under the mouse while it scales.
+      const newZoom = zoom + (targetZoom - zoom) * 0.15;
+      offsetX = mouseX - (mouseX - offsetX) * (newZoom / zoom);
+      offsetY = mouseY - (mouseY - offsetY) * (newZoom / zoom);
+      zoom = newZoom;
+
+      // Keep the grid covering the whole screen (no black gaps at the edges).
+      const gridW = cols * CELL * zoom;
+      const gridH = rows * CELL * zoom;
+      offsetX = Math.min(0, Math.max(innerWidth - gridW, offsetX));
+      offsetY = Math.min(0, Math.max(innerHeight - gridH, offsetY));
 
       // Clear the screen.
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -83,20 +103,15 @@ export default function TimeInterval() {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, innerWidth, innerHeight);
 
-      // Zoom around the centre of the screen: the grid's centre stays in the middle.
-      const gridW = cols * CELL;
-      const gridH = rows * CELL;
-      ctx.translate(innerWidth / 2, innerHeight / 2);
+      ctx.translate(offsetX, offsetY);
       ctx.scale(zoom, zoom);
-      ctx.translate(-gridW / 2, -gridH / 2);
 
       // Only draw the cells that are on screen at this zoom.
-      const halfW = innerWidth / 2 / zoom;
-      const halfH = innerHeight / 2 / zoom;
-      const firstCol = Math.max(0, Math.floor((gridW / 2 - halfW) / CELL));
-      const lastCol = Math.min(cols - 1, Math.ceil((gridW / 2 + halfW) / CELL));
-      const firstRow = Math.max(0, Math.floor((gridH / 2 - halfH) / CELL));
-      const lastRow = Math.min(rows - 1, Math.ceil((gridH / 2 + halfH) / CELL));
+      const cellOnScreen = CELL * zoom;
+      const firstCol = Math.max(0, Math.floor(-offsetX / cellOnScreen));
+      const lastCol = Math.min(cols - 1, Math.ceil((innerWidth - offsetX) / cellOnScreen));
+      const firstRow = Math.max(0, Math.floor(-offsetY / cellOnScreen));
+      const lastRow = Math.min(rows - 1, Math.ceil((innerHeight - offsetY) / cellOnScreen));
 
       ctx.font = `${CELL * 0.8}px ui-monospace, Menlo, monospace`;
       ctx.textAlign = "center";
@@ -153,6 +168,7 @@ export default function TimeInterval() {
   return (
     <main className={styles.container}>
       <canvas ref={canvasRef} className={styles.canvas} />
+      <div className={styles.edgeGlow} />
     </main>
   );
 }
