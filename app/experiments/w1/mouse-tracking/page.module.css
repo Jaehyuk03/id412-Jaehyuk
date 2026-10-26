@@ -3,6 +3,7 @@
   inset: 0;
   overflow: hidden;
   background: black;
+  cursor: none; /* hidden: the page draws its own cursor */
 }
 
 .canvas {
