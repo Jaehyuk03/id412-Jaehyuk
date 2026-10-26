@@ -1,0 +1,14 @@
+.container {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+}
+
+.counter {
+  font-family: ui-monospace, Menlo, monospace;
+  font-size: 15vw;
+  color: white;
+}
