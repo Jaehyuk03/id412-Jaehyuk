@@ -5,7 +5,7 @@ A full-screen grid of neon-green digits. Every cell counts 0 → 9 at its own ra
 - Route: /experiments/w1/time-interval
 - Week: W1 · Tech: Canvas, requestAnimationFrame, CSS Modules
 - Inputs: time, scroll wheel + mouse position (zoom)
-- Parameters: CELL (28 px), MIN_INTERVAL / MAX_INTERVAL (60–900 ms), BLANK_CHANCE (0.12), TRAIL (12 cells), GLOW (14 px), MIN_ZOOM / MAX_ZOOM (0.5–4), EDGE (120 px)
+- Parameters: CELL (28 px), MIN_INTERVAL / MAX_INTERVAL (60–900 ms), BLANK_CHANCE (0.12), TRAIL (12 cells), GLOW (14 px), MIN_ZOOM / MAX_ZOOM (0.5–4), EDGE (40 px)
 
 ## How it works
 - `resize()` builds a grid of `CELL`-sized cells that covers the whole window (rebuilt on resize).

@@ -15,7 +15,7 @@ const GLOW = 14; // px, neon glow blur on the brightest digits
 const MIN_ZOOM = 0.5; // most zoomed out
 const MAX_ZOOM = 4; // most zoomed in
 const ZOOM_SPEED = 0.0015; // how much one scroll step zooms
-const EDGE = 120; // px, how far the neon edge glow reaches into the screen
+const EDGE = 40; // px, how far the neon edge glow reaches into the screen
 
 type Cell = { digit: number; interval: number; next: number; blank: boolean };
 type Drop = { y: number; speed: number }; // y in cells, speed in cells per second
@@ -179,9 +179,9 @@ export default function TimeInterval() {
 
       // Thin neon line right at the edge.
       ctx.strokeStyle = "rgba(57, 255, 20, 0.6)";
-      ctx.lineWidth = 1.5;
+      ctx.lineWidth = 0.5;
       ctx.shadowColor = "#39ff14";
-      ctx.shadowBlur = 10;
+      ctx.shadowBlur = 3;
       ctx.strokeRect(0, 0, w, h);
     }
 
