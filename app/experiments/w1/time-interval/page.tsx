@@ -11,6 +11,7 @@ const MIN_INTERVAL = 60; // ms, fastest a cell can count
 const MAX_INTERVAL = 900; // ms, slowest a cell can count
 const BLANK_CHANCE = 0.12; // chance a cell is blank (re-rolled each time it wraps to 0)
 const TRAIL = 12; // cells, length of the rain trail
+const GLOW = 14; // px, neon glow blur on the brightest digits
 
 type Cell = { digit: number; interval: number; next: number; blank: boolean };
 type Drop = { y: number; speed: number }; // y in cells, speed in cells per second
@@ -62,8 +63,10 @@ export default function TimeInterval() {
       const dt = (now - last) / 1000;
       last = now;
 
+      ctx.shadowBlur = 0;
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, innerWidth, innerHeight);
+      ctx.shadowColor = "#39ff14";
       ctx.font = `${CELL * 0.8}px ui-monospace, Menlo, monospace`;
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
@@ -92,7 +95,9 @@ export default function TimeInterval() {
           let light = 0.18;
           if (behind >= 0 && behind < TRAIL) light += (1 - behind / TRAIL) * 0.82;
 
-          ctx.fillStyle = `rgba(255, 255, 255, ${light})`;
+          // Neon green; brighter digits also get a glow (shadowBlur) like a neon sign.
+          ctx.fillStyle = `rgba(57, 255, 20, ${light})`;
+          ctx.shadowBlur = light > 0.4 ? GLOW * light : 0;
           ctx.fillText(String(cell.digit), x * CELL + CELL / 2, y * CELL + CELL / 2);
         }
       }
