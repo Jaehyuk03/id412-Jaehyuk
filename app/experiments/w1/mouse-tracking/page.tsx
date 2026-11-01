@@ -2,12 +2,12 @@
 
 import { useEffect, useRef } from "react";
 import styles from "./page.module.css";
-import { BARK, CURSOR, MOUTH, RUN_1, RUN_2, SIT, STAND } from "./sprites";
+import { BARK, BONE, MOUTH, RUN_1, RUN_2, SIT, STAND } from "./sprites";
 
 // Tracks the mouse. A little white pixel puppy runs after the cursor. When the
 // mouse stops, the puppy sits. When the cursor runs away from it, the puppy
 // jumps, bites the cursor, shakes it, lets go with a "멍!" and runs after it.
-// The real cursor is hidden; we draw our own so the puppy can hold it.
+// The real cursor is hidden; we draw a chew bone instead so the puppy can hold it.
 const PIXEL = 2; // px, size of one pixel of the puppy (28 × 16 pixels)
 const EASE = 0.08; // how fast the puppy catches up (0 to 1)
 const STOP_DIST = 36; // px, the puppy stops this far from the cursor
@@ -131,11 +131,13 @@ export default function MouseTracking() {
       ctx.fillStyle = "black";
       ctx.fillRect(0, 0, innerWidth, innerHeight);
 
-      // Puppy, feet centred on dog.x / dog.y. Then the cursor on top of it.
+      // Puppy, feet centred on dog.x / dog.y. Then the bone cursor on top of it, centred on the mouse.
       const w = pose[0].length * PIXEL;
       const h = pose.length * PIXEL;
       drawSprite(pose, dog.x - w / 2 + shake, dog.y - h - bob, facing === -1);
-      drawSprite(CURSOR, cursor.x, cursor.y, false);
+      const bw = BONE[0].length * PIXEL;
+      const bh = BONE.length * PIXEL;
+      drawSprite(BONE, cursor.x - bw / 2, cursor.y - bh / 2, false);
 
       // "멍!" after letting go, fading out.
       const age = now - letGo;

@@ -105,17 +105,14 @@ export const SIT = [
 // Where the mouth is in the puppy grid (column, row), for biting the cursor.
 export const MOUTH = { col: 25, row: 5 };
 
-// The mouse cursor, drawn by us so the puppy can hold it. Tip at the top-left.
-export const CURSOR = [
-  "o......",
-  "oo.....",
-  "o#o....",
-  "o##o...",
-  "o###o..",
-  "o####o.",
-  "o#####o",
-  "o##oooo",
-  "o#o#o..",
-  "oo.o#o.",
-  "o...oo.",
+// The mouse cursor: a dog chew bone (개껌), drawn by us so the puppy can hold it.
+// Its centre sits on the mouse.
+export const BONE = [
+  ".oo.......oo.",
+  "o##o.....o##o",
+  "o###ooooo###o",
+  ".o#########o.",
+  "o###ooooo###o",
+  "o##o.....o##o",
+  ".oo.......oo.",
 ];
